@@ -10,30 +10,30 @@
     async = require.main.require("async");
 
   const constants = Object.freeze({
-    name: "Yandex",
+    name: "Vk",
     admin: {
-      route: "/plugins/sso-yandex",
-      icon: "icon-yandex",
+      route: "/plugins/sso-vk",
+      icon: "icon-vk",
     },
   });
 
-  const Yandex = {
+  const Plugin = {
     settings: {
-      id: process.env.SSO_YANDEX_CLIENT_ID || undefined,
-      secret: process.env.SSO_YANDEX_CLIENT_SECRET || undefined,
+      id: process.env.SSO_VK_CLIENT_ID || undefined,
+      secret: process.env.SSO_VK_CLIENT_SECRET || undefined,
       autoconfirm: 0,
       disableRegistration: false,
     },
   };
 
-  Yandex.init = function (data, callback) {
+  Plugin.init = function (data, callback) {
     const hostHelpers = require.main.require("./src/routes/helpers");
 
     hostHelpers.setupAdminPageRoute(
       data.router,
-      "/admin/plugins/sso-yandex",
+      "/admin/plugins/sso-vk",
       (req, res) => {
-        res.render("admin/plugins/sso-yandex", {
+        res.render("admin/plugins/sso-vk", {
           title: constants.name,
           baseUrl: nconf.get("url"),
         });
@@ -42,20 +42,20 @@
 
     hostHelpers.setupPageRoute(
       data.router,
-      "/deauth/yandex",
+      "/deauth/vk",
       [data.middleware.requireUser],
       (req, res) => {
-        res.render("plugins/sso-yandex/deauth", {
-          service: "Yandex",
+        res.render("plugins/sso-vk/deauth", {
+          service: "VK",
         });
       },
     );
 
     data.router.post(
-      "/deauth/yandex",
+      "/deauth/vk",
       [data.middleware.requireUser, data.middleware.applyCSRF],
       (req, res, next) => {
-        Yandex.deleteUserData(
+        Plugin.deleteUserData(
           {
             uid: req.user.uid,
           },
@@ -70,51 +70,50 @@
       },
     );
 
-    meta.settings.get("sso-yandex", (_, loadedSettings) => {
+    meta.settings.get("sso-vk", (_, loadedSettings) => {
       if (loadedSettings.id) {
-        Yandex.settings.id = loadedSettings.id;
+        Plugin.settings.id = loadedSettings.id;
       }
       if (loadedSettings.secret) {
-        Yandex.settings.secret = loadedSettings.secret;
+        Plugin.settings.secret = loadedSettings.secret;
       }
-      Yandex.settings.autoconfirm = loadedSettings.autoconfirm === "on";
-      Yandex.settings.disableRegistration =
+      Plugin.settings.autoconfirm = loadedSettings.autoconfirm === "on";
+      Plugin.settings.disableRegistration =
         loadedSettings.disableRegistration === "on";
       callback();
     });
   };
 
-  Yandex.getStrategy = function (strategies, callback) {
-    meta.settings.get("sso-yandex", function (err, settings) {
+  Plugin.getStrategy = function (strategies, callback) {
+    meta.settings.get("sso-vk", function (err, settings) {
       if (!err && settings.id && settings.secret) {
         passport.use(
           new strategy(
             {
               clientID: settings.id,
               clientSecret: settings.secret,
-              callbackURL: nconf.get("url") + "/auth/yandex/callback",
+              callbackURL: nconf.get("url") + "/auth/vk/callback",
               passReqToCallback: true,
             },
             function (req, accessToken, refreshToken, profile, done) {
               if (
-                req.hasOwnProperty("user") &&
+                req.hasOwnProperty("ushttp://localhost:4567er") &&
                 req.user.hasOwnProperty("uid") & (req.user.uid > 0)
               ) {
                 const { user } = req;
                 const { uid } = user;
 
-                User.setUserField(uid, "yandexid", profile.id);
-                db.setObjectField("yandexid:uid", profile.id, uid);
+                User.setUserField(uid, "vkid", profile.id);
+                db.setObjectField("vkid:uid", profile.id, uid);
                 return done(null, user);
               }
 
-              Yandex.login(
+              Plugin.login(
                 profile.id,
+                profile.username,
                 profile.displayName,
-                profile.emails[0].value,
-                "https://avatars.yandex.net/get-yapic/" +
-                  profile._json.default_avatar_id +
-                  "/islands-retina-50",
+                profile.email,
+                profile.photos[0].value,
                 function (err, user) {
                   if (err) {
                     return done(err);
@@ -127,16 +126,20 @@
         );
 
         strategies.push({
-          name: "yandex",
-          url: "/auth/yandex",
-          callbackURL: "/auth/yandex/callback",
+          name: "vkontakte",
+          url: "/auth/vk",
+          callbackURL: "/auth/vk/callback",
           icon: constants.admin.icon,
           icons: {
-            svg: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 26 26"><path fill="#fc3f1d" d="M13 26c7.18 0 13-5.82 13-13S20.18 0 13 0 0 5.82 0 13s5.82 13 13 13z"></path><path fill="#fff" d="M17.15 20.28h-2.58V7.518h-1.149c-2.101 0-3.206 1.062-3.206 2.633 0 1.787.769 2.61 2.34 3.672l1.3.867-3.738 5.59H7.334l3.358-4.99c-1.932-1.374-3.011-2.728-3.011-4.987 0-2.85 1.971-4.778 5.73-4.778h3.738l.001 14.755z"></path></svg>`,
+            svg: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 48 48" fill="none">
+            <path d="M0 23.04C0 12.1788 0 6.74826 3.37413 3.37413C6.74826 0 12.1788 0 23.04 0H24.96C35.8212 0 41.2517 0 44.6259 3.37413C48 6.74826 48 12.1788 48 23.04V24.96C48 35.8212 48 41.2517 44.6259 44.6259C41.2517 48 35.8212 48 24.96 48H23.04C12.1788 48 6.74826 48 3.37413 44.6259C0 41.2517 0 35.8212 0 24.96V23.04Z" fill="#0077FF"/>
+            <path d="M25.54 34.5801C14.6 34.5801 8.3601 27.0801 8.1001 14.6001H13.5801C13.7601 23.7601 17.8 27.6401 21 28.4401V14.6001H26.1602V22.5001C29.3202 22.1601 32.6398 18.5601 33.7598 14.6001H38.9199C38.0599 19.4801 34.4599 23.0801 31.8999 24.5601C34.4599 25.7601 38.5601 28.9001 40.1201 34.5801H34.4399C33.2199 30.7801 30.1802 27.8401 26.1602 27.4401V34.5801H25.54Z" fill="white"/>
+            </svg>`,
           },
+          scope: "email",
           labels: {
-            login: "[[yandexsso:sign-in]]",
-            register: "[[yandexsso:sign-up]]",
+            login: "[[vksso:sign-in]]",
+            register: "[[vksso:sign-up]]",
           },
         });
       }
@@ -145,10 +148,10 @@
     });
   };
 
-  Yandex.login = function (yandexid, username, email, picture, callback) {
-    const autoConfirm = Yandex.settings.autoconfirm;
+  Plugin.login = function (id, username, email, picture, callback) {
+    const autoConfirm = Plugin.settings.autoconfirm;
 
-    Yandex.getUidByYandexId(yandexid, function (err, uid) {
+    Plugin.getUid(id, function (err, uid) {
       if (err) {
         return callback(err);
       }
@@ -166,8 +169,8 @@
             await User.email.confirmByUid(uid);
           }
           // Save google-specific information to the user
-          User.setUserField(uid, "yandexid", yandexid);
-          db.setObjectField("yandexid:uid", yandexid, uid);
+          User.setUserField(uid, "vkid", id);
+          db.setObjectField("vkid:uid", id, uid);
 
           // Save their photo, if present
           if (picture) {
@@ -187,9 +190,9 @@
 
           if (!uid) {
             // Abort user creation if registration via SSO is restricted
-            if (Yandex.settings.disableRegistration) {
+            if (Plugin.settings.disableRegistration) {
               return callback(
-                new Error("[[error:sso-registration-disabled, Yandex]]"),
+                new Error("[[error:sso-registration-disabled, VK]]"),
               );
             }
             User.create(
@@ -210,8 +213,8 @@
     });
   };
 
-  Yandex.getUidByYandexId = function (yandexid, callback) {
-    db.getObjectField("yandexid:uid", yandexid, (err, uid) => {
+  Plugin.getUid = function (id, callback) {
+    db.getObjectField("vkid:uid", id, (err, uid) => {
       if (err) {
         return callback(err);
       }
@@ -219,8 +222,8 @@
     });
   };
 
-  Yandex.getAssociation = function (data, callback) {
-    User.getUserField(data.uid, "yandexid", (err, gplusid) => {
+  Plugin.getAssociation = function (data, callback) {
+    User.getUserField(data.uid, "vkid", (err, gplusid) => {
       if (err) {
         return callback(err, data);
       }
@@ -229,14 +232,14 @@
         data.associations.push({
           associated: true,
           // url: ``,
-          deauthUrl: `${nconf.get("url")}/deauth/yandex`,
+          deauthUrl: `${nconf.get("url")}/deauth/vk`,
           name: constants.name,
           icon: constants.admin.icon,
         });
       } else {
         data.associations.push({
           associated: false,
-          url: `${nconf.get("url")}/auth/yandex`,
+          url: `${nconf.get("url")}/auth/vk`,
           name: constants.name,
           icon: constants.admin.icon,
         });
@@ -246,7 +249,7 @@
     });
   };
 
-  Yandex.addMenuItem = function (custom_header, callback) {
+  Plugin.addMenuItem = function (custom_header, callback) {
     custom_header.authentication.push({
       route: constants.admin.route,
       icon: constants.admin.icon,
@@ -256,23 +259,23 @@
     callback(null, custom_header);
   };
 
-  Yandex.deleteUserData = function (data, callback) {
+  Plugin.deleteUserData = function (data, callback) {
     const { uid } = data;
 
     async.waterfall(
       [
-        async.apply(User.getUserField, uid, "yandexid"),
+        async.apply(User.getUserField, uid, "vkid"),
         function (oAuthIdToDelete, next) {
-          db.deleteObjectField("yandexid:uid", oAuthIdToDelete, next);
+          db.deleteObjectField("vkid:uid", oAuthIdToDelete, next);
         },
         function (next) {
-          db.deleteObjectField(`user:${uid}`, "yandexid", next);
+          db.deleteObjectField(`user:${uid}`, "vkid", next);
         },
       ],
       (err) => {
         if (err) {
           winston.error(
-            "[sso-yandex] Could not remove OAuthId data for uid " +
+            "[sso-vk] Could not remove OAuthId data for uid " +
               uid +
               ". Error: " +
               err,
@@ -284,5 +287,5 @@
     );
   };
 
-  module.exports = Yandex;
+  module.exports = Plugin;
 })(module);

@@ -8,7 +8,7 @@
 					<form role="form" class="sso-vk-settings">
 						<p>
 							Create a <strong>vk OAuth Client</strong> via the
-							<a href="https://oauth.vk.com/client/new">OAuth Portal</a> and then paste
+							<a href="https://dev.vk.com/ru/mini-apps/management/creating-new-apps">create standalone app</a> and then paste
 							your application details here.
 						</p>
 						<div class="form-group">
