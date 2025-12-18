@@ -1,0 +1,51 @@
+{
+  "name": "nodebb-plugin-sso-yandex2",
+  "version": "2.1.2",
+  "description": "NodeBB Yandex SSO",
+  "main": "library.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mysteren/nodebb-plugin-sso-yandex.git"
+  },
+  "keywords": [
+    "nodebb",
+    "plugin",
+    "yandex",
+    "sso",
+    "single sign on",
+    "registration"
+  ],
+  "author": {
+    "name": "TimofeyC",
+    "email": "mysterenct@gmail.com"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "license": "MIT",
+  "nbbpm": {
+    "compatibility": "^3.2.0 || ^4.x"
+  },
+  "dependencies": {
+    "passport-yandex": "^0.0.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.3.0",
+    "@commitlint/config-angular": "19.3.0",
+    "eslint": "9.x",
+    "eslint-config-nodebb": "0.2.1",
+    "eslint-plugin-import": "2.x",
+    "husky": "9.0.11",
+    "lint-staged": "15.2.7"
+  },
+  "scripts": {}
+}

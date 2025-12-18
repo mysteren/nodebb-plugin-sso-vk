@@ -1,0 +1,24 @@
+{
+	"id": "nodebb-plugin-sso-yandex2",
+	"name": "NodeBB Yandex SSO",
+	"description": "NodeBB Plugin that allows users to login/register via their Yandex account.",
+	"url": "https://github.com/mysteren/nodebb-plugin-sso-yandex",
+	"templates": "static/templates",
+	"languages": "languages",
+	"staticDirs": {
+		"static": "./static"
+	},
+	"scss": [
+		"static/scss/style.scss"
+	],
+	"hooks": [
+		{ "hook": "static:app.load", "method": "init" },
+		{ "hook": "filter:auth.init", "method": "getStrategy" },
+		{ "hook": "filter:auth.list", "method": "getAssociation" },
+		{ "hook": "filter:admin.header.build", "method": "addMenuItem" },
+		{ "hook": "static:user.delete", "method": "deleteUserData" }
+	],
+	"modules": {
+		"../admin/plugins/sso-yandex.js": "static/lib/admin.js"
+	}
+}
