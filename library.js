@@ -5,7 +5,7 @@
     meta = require.main.require("./src/meta"),
     db = require.main.require("./src/database"),
     passport = require.main.require("passport"),
-    strategy = require("passport-vk").Strategy,
+    AuthStrategy = require("passport-oauth2").Strategy,
     nconf = require.main.require("nconf"),
     async = require.main.require("async");
 
@@ -88,23 +88,15 @@
     meta.settings.get("sso-vk", function (err, settings) {
       if (!err && settings.id && settings.secret) {
         passport.use(
-          new strategy(
+          new AuthStrategy(
             {
-              /**
-               *  options = options || {};
-               options.authorizationURL = options.authorizationURL || 'https://oauth.vk.com/authorize';
-               options.tokenURL = options.tokenURL || 'https://oauth.vk.com/access_token';
-               options.scopeSeparator = options.scopeSeparator || ',';
-               options.passReqToCallback = options.passReqToCallback || false; //Request needs to be verified
-               this.lang = options.lang || 'en';
-               */
               authorizationURL: "https://id.vk.ru/authorize",
-              tokenURL: "https://id.vk.ru/oauth2/auth ",
+              tokenURL: "https://id.vk.ru/oauth2/auth",
               clientID: settings.id,
               clientSecret: settings.secret,
               callbackURL: nconf.get("url") + "/auth/vk/callback",
-              passReqToCallback: true,
-              lang: "ru",
+              // passReqToCallback: true,
+              // lang: "ru",
             },
             function (req, accessToken, refreshToken, profile, done) {
               if (
@@ -147,7 +139,7 @@
             <path d="M25.54 34.5801C14.6 34.5801 8.3601 27.0801 8.1001 14.6001H13.5801C13.7601 23.7601 17.8 27.6401 21 28.4401V14.6001H26.1602V22.5001C29.3202 22.1601 32.6398 18.5601 33.7598 14.6001H38.9199C38.0599 19.4801 34.4599 23.0801 31.8999 24.5601C34.4599 25.7601 38.5601 28.9001 40.1201 34.5801H34.4399C33.2199 30.7801 30.1802 27.8401 26.1602 27.4401V34.5801H25.54Z" fill="white"/>
             </svg>`,
           },
-          scope: "email",
+          scope: "",
           labels: {
             login: "[[vksso:sign-in]]",
             register: "[[vksso:sign-up]]",

@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-sso-vk2",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "NodeBB VK SSO",
   "main": "library.js",
   "repository": {
@@ -35,9 +35,6 @@
   "nbbpm": {
     "compatibility": "^3.2.0 || ^4.x"
   },
-  "dependencies": {
-    "passport-vk": "^1.0.0"
-  },
   "devDependencies": {
     "@commitlint/cli": "20.2.0",
     "@commitlint/config-angular": "20.2.0",
@@ -47,5 +44,8 @@
     "husky": "9.1.7",
     "lint-staged": "16.2.7"
   },
-  "scripts": {}
+  "scripts": {},
+  "dependencies": {
+    "passport-oauth2": "^1.8.0"
+  }
 }
