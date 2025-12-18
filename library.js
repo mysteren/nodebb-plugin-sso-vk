@@ -90,14 +90,25 @@
         passport.use(
           new strategy(
             {
+              /**
+               *  options = options || {};
+               options.authorizationURL = options.authorizationURL || 'https://oauth.vk.com/authorize';
+               options.tokenURL = options.tokenURL || 'https://oauth.vk.com/access_token';
+               options.scopeSeparator = options.scopeSeparator || ',';
+               options.passReqToCallback = options.passReqToCallback || false; //Request needs to be verified
+               this.lang = options.lang || 'en';
+               */
+              authorizationURL: "https://id.vk.ru/authorize",
+              tokenURL: "https://id.vk.ru/oauth2/auth ",
               clientID: settings.id,
               clientSecret: settings.secret,
               callbackURL: nconf.get("url") + "/auth/vk/callback",
               passReqToCallback: true,
+              lang: ru,
             },
             function (req, accessToken, refreshToken, profile, done) {
               if (
-                req.hasOwnProperty("ushttp://localhost:4567er") &&
+                req.hasOwnProperty("user") &&
                 req.user.hasOwnProperty("uid") & (req.user.uid > 0)
               ) {
                 const { user } = req;
