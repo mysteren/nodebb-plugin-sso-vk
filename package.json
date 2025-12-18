@@ -1,11 +1,11 @@
 {
-  "name": "nodebb-plugin-sso-yandex2",
-  "version": "2.1.2",
-  "description": "NodeBB Yandex SSO",
+  "name": "nodebb-plugin-sso-vk2",
+  "version": "1.0.0",
+  "description": "NodeBB VK SSO",
   "main": "library.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mysteren/nodebb-plugin-sso-yandex.git"
+    "url": "git+https://github.com/mysteren/nodebb-plugin-sso-vk.git"
   },
   "keywords": [
     "nodebb",
@@ -36,16 +36,16 @@
     "compatibility": "^3.2.0 || ^4.x"
   },
   "dependencies": {
-    "passport-yandex": "^0.0.5"
+    "passport-vk": "^1.0.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "19.3.0",
-    "@commitlint/config-angular": "19.3.0",
+    "@commitlint/cli": "20.2.0",
+    "@commitlint/config-angular": "20.2.0",
     "eslint": "9.x",
-    "eslint-config-nodebb": "0.2.1",
+    "eslint-config-nodebb": "1.1.11",
     "eslint-plugin-import": "2.x",
-    "husky": "9.0.11",
-    "lint-staged": "15.2.7"
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7"
   },
   "scripts": {}
 }

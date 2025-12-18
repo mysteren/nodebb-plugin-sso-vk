@@ -3,12 +3,12 @@
 	<div class="row m-0">
 		<div class="col-lg-9">
 			<div class="panel panel-default">
-				<div class="panel-heading">Yandex Social Authentication</div>
+				<div class="panel-heading">Vk Social Authentication</div>
 				<div class="panel-body">
-					<form role="form" class="sso-yandex-settings">
+					<form role="form" class="sso-vk-settings">
 						<p>
-							Create a <strong>Yandex OAuth Client</strong> via the
-							<a href="https://oauth.yandex.com/client/new">OAuth Portal</a> and then paste
+							Create a <strong>vk OAuth Client</strong> via the
+							<a href="https://oauth.vk.com/client/new">OAuth Portal</a> and then paste
 							your application details here.
 						</p>
 						<div class="form-group">
@@ -21,7 +21,7 @@
 								placeholder="OAuth Password">
 						</div>
 						<p class="help-block">
-							The appropriate "Redirect URI" is your NodeBB's URL with `/auth/yandex/callback` appended to it.
+							The appropriate "Redirect URI" is your NodeBB's URL with `/auth/vk/callback` appended to it.
 						</p>
 						<div class="form-check">
 							<input type="checkbox" class="form-check-input" id="autoconfirm" name="autoconfirm">
@@ -46,4 +46,3 @@
 		</div>
 	</div>
 </div>
-
