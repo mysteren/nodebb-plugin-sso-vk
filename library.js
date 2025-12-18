@@ -104,7 +104,7 @@
               clientSecret: settings.secret,
               callbackURL: nconf.get("url") + "/auth/vk/callback",
               passReqToCallback: true,
-              lang: ru,
+              lang: "ru",
             },
             function (req, accessToken, refreshToken, profile, done) {
               if (
