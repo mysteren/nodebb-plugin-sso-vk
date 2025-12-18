@@ -1,6 +1,6 @@
 {
   "name": "nodebb-plugin-sso-vk2",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "NodeBB VK SSO",
   "main": "library.js",
   "repository": {

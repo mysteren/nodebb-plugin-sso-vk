@@ -5,7 +5,7 @@
     meta = require.main.require("./src/meta"),
     db = require.main.require("./src/database"),
     passport = require.main.require("passport"),
-    AuthStrategy = require("passport-oauth2").Strategy,
+    AuthStrategy = require("passport-vkontakte").Strategy,
     nconf = require.main.require("nconf"),
     async = require.main.require("async");
 
@@ -92,8 +92,11 @@
             {
               authorizationURL: "https://id.vk.ru/authorize",
               tokenURL: "https://id.vk.ru/oauth2/auth",
+              profileURL: "https://id.vk.ru/oauth2/public_info",
               clientID: settings.id,
               clientSecret: settings.secret,
+              pkce: true,
+              state: true,
               callbackURL: nconf.get("url") + "/auth/vk/callback",
               // passReqToCallback: true,
               // lang: "ru",
